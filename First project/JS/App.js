@@ -16,6 +16,8 @@ const canvasApp = {
     init(canvasId) {
         this.ctx = document.querySelector(canvasId).getContext('2d')
         this.setDimensions(canvasId)
+        this.setEventListeners()
+        this.start()
     },
 
     setDimensions(canvasId) {
@@ -23,7 +25,21 @@ const canvasApp = {
         document.querySelector(canvasId).setAttribute('width', this.canvasSize.w)
         document.querySelector(canvasId).setAttribute('height', this.canvasSize.h)
     },
-
+    //llamada en init
+    setEventListeners() {
+        document.onkeydown = e => {
+            const { key } = e
+            switch (key) {
+                case 'ArrowLeft':
+                    this.player.moveLeft()
+                    break;
+                case 'ArrowRight':
+                    this.player.moveRight()
+                    break;
+            }
+        }
+    },
+    //llamada en init
     start() {
         this.reset()
 
@@ -33,17 +49,26 @@ const canvasApp = {
 
             this.clearAll()
             this.drawAll()
-            this.generatObstacles()
+
 
 
         }, 1000 / this.FPS)
     },
 
-    reset() { },
+    reset() {
+        this.background = new Background(this.ctx, this.canvasSize.w, this.canvasSize.h, 'Background.png')
+        this.player = new Player(this.ctx, this.canvasSize.w/2, 500, 150, 150, this.canvasSize, 'Space Ship.png')// esta mal hay que darle valores relativos
+    },
 
-    drawAll() { },
-
-    clearAll() { },
+    //llamada en start
+    drawAll() {
+        this.background.draw()
+        this.player.draw() // aqui va this.frameCounter cuando tengamos el sprite
+    },
+    //llamada en start
+    clearAll() {
+        this.ctx.clearRect(0, 0, this.width, this.height)
+    },
 
 
 
